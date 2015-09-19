@@ -1,0 +1,37 @@
+name:                cedict-parser
+version:             0.1.0.0
+license-file:        LICENSE
+author:              Jens Östlund
+maintainer:          jostlund@gmail.com
+build-type:          Simple
+cabal-version:       >=1.10
+
+library
+  build-depends:  base >=4.8 && <4.9
+                , parsec >= 3.1.9
+                , mtl >= 2.2.1
+  exposed-modules: Cedict.Parser
+  hs-source-dirs: src
+  default-language:    Haskell2010
+
+executable cedict-parser
+  main-is:             Main.hs
+  build-depends:       base >=4.8 && <4.9
+                     , parsec >= 3.1.9
+                     , mtl >= 2.2.1
+  hs-source-dirs:      src
+  default-language:    Haskell2010
+
+
+
+Test-Suite tests
+  type: exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is: Main.hs
+  build-depends:   base
+                 , cedict-parser
+                 , test-framework
+                 , test-framework-hunit
+                 , HUnit >=1.3.0.0
+  ghc-options: -Wall
+  default-language:    Haskell2010
