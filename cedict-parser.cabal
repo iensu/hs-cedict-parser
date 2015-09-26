@@ -29,6 +29,7 @@ Test-Suite tests
   hs-source-dirs: test
   main-is: Main.hs
   build-depends:   base
+                 , parsec >= 3.1.9
                  , cedict-parser
                  , test-framework
                  , test-framework-hunit
