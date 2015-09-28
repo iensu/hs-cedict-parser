@@ -2,3 +2,4 @@
 dist/
 resources/
 TAGS
+cabal.sandbox.config
