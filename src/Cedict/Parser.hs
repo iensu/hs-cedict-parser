@@ -1,27 +1,40 @@
 {-# LANGUAGE FlexibleContexts #-}
 
-module Cedict.Parser (line, lines, comment) where
+module Cedict.Parser (entries) where
 
-import           Control.Applicative
-import           Prelude             hiding (lines)
-import           Text.Parsec         ((<?>))
-import qualified Text.Parsec         as P
+import           Cedict.Entry                  (Entry (..))
+import           Prelude                       hiding (lines)
+import           Text.Parsec                   ((<?>))
+import           Text.ParserCombinators.Parsec (Parser, anyChar, between, char,
+                                                digit, eof, letter, many, many1,
+                                                manyTill, noneOf, oneOf,
+                                                skipMany, space, (<|>))
 
+entries :: Parser [Entry]
+entries =
+    (:) <$> entryLine <*> (many entryLine) <* eof <?> "lines"
+    where entryLine = id <$> skippable *> line
+          skippable = skipMany (comment <|> eol)
 
-comment :: P.Parsec String () ()
-comment = do
-  P.char '#'
-  P.skipMany $ P.noneOf "\r\n"
-  <?> "comment"
+line :: Parser Entry
+line =
+    Entry <$> entry <*> (delim *> entry) <*> (delim *> pron) <*> (delim *> trans) <?> "line"
+    where delim = skipMany space
 
-line :: P.Parsec String () String
-line = P.many $ P.noneOf "\r\n"
+entry :: Parser String
+entry = many1 (noneOf " \n\r\t") <?> "entry"
 
-lines :: P.Parsec String () [String]
-lines = do
-  l <- line
-  ls <- P.many $ do
-          P.newline
-          line
-  P.eof
-  return (l:ls)
+trans :: Parser String
+trans = (:) <$> char '/' <*> (manyTill anyChar (eol <|> eof)) <?> "translation"
+
+pron :: Parser String
+pron = between (char '[') (char ']') (many1 allowedChars) <?> "pronunciation"
+       where allowedChars = letter <|> digit <|> space <|> (oneOf ",:·")
+
+comment :: Parser ()
+comment = id <$> (char '#' *> (skipMany $ noneOf "\r\n")) <?> "comment"
+
+eol :: Parser ()
+eol = do _ <- oneOf "\n\r"
+         return ()
+      <?> "end of line"

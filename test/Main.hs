@@ -1,8 +1,9 @@
-module Main (main) where
+module Main where
 
-import qualified CedictParserTests as CPT
-import           Test.Framework    (defaultMain)
+import           Test.Tasty          (defaultMain, testGroup)
+
+import qualified Cedict.Parser.Tests
 
 main :: IO ()
-main = do
-  defaultMain [CPT.tests]
+main = defaultMain $ testGroup "Tests"
+       [ Cedict.Parser.Tests.tests ]
