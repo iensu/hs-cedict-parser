@@ -12,7 +12,7 @@ import           Text.ParserCombinators.Parsec (Parser, anyChar, between, char,
 
 entries :: Parser [Entry]
 entries =
-    (:) <$> entryLine <*> (many entryLine) <* eof <?> "lines"
+    (:) <$> entryLine <*> many entryLine <* eof <?> "lines"
     where entryLine = id <$> skippable *> line
           skippable = skipMany (comment <|> eol)
 
@@ -25,14 +25,14 @@ entry :: Parser String
 entry = many1 (noneOf " \n\r\t") <?> "entry"
 
 trans :: Parser String
-trans = (:) <$> char '/' <*> (manyTill anyChar (eol <|> eof)) <?> "translation"
+trans = (:) <$> char '/' <*> manyTill anyChar (eol <|> eof) <?> "translation"
 
 pron :: Parser String
 pron = between (char '[') (char ']') (many1 allowedChars) <?> "pronunciation"
-       where allowedChars = letter <|> digit <|> space <|> (oneOf ",:·")
+       where allowedChars = letter <|> digit <|> space <|> oneOf ",:·"
 
 comment :: Parser ()
-comment = id <$> (char '#' *> (skipMany $ noneOf "\r\n")) <?> "comment"
+comment = id <$> char '#' *> skipMany (noneOf "\r\n") <?> "comment"
 
 eol :: Parser ()
 eol = do _ <- oneOf "\n\r"
