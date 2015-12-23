@@ -7,7 +7,7 @@ build-type:          Simple
 cabal-version:       >=1.10
 
 library
-  build-depends:  base >=4.8 && <4.9
+  build-depends:  base >=4.7 && <4.9
                 , parsec >= 3.1.9
                 , mtl >= 2.2.1
   exposed-modules: Cedict.Parser, Cedict.Entry
@@ -16,10 +16,10 @@ library
 
 executable cedict-parser
   main-is:             Main.hs
-  build-depends:       base >=4.8 && <4.9
+  build-depends:       base >=4.7 && <4.9
                      , parsec >= 3.1.9
                      , mtl >= 2.2.1
-                     , zlib >= 0.6.1.1
+                     , zlib >= 0.5.4.2
                      , bytestring >= 0.10.6.0
   hs-source-dirs:      src
   default-language:    Haskell2010
@@ -30,9 +30,9 @@ Test-Suite tests
   type: exitcode-stdio-1.0
   hs-source-dirs: test src
   main-is: Main.hs
-  build-depends:   base >=4.8 && <4.9
-                 , HUnit >= 1.3.0.0
-                 , tasty >= 0.11
+  build-depends:   base >=4.7 && <4.9
+                 , HUnit >= 1.2.5.2
+                 , tasty >= 0.10
                  , tasty-hunit >= 0.9.2
                  , parsec >= 3.1.9
   ghc-options: -Wall
